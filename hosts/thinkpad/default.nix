@@ -33,10 +33,6 @@
           extraSpecialArgs = { inherit inputs; };
           users.crow = {
             home.stateVersion = "25.11";
-            imports = [
-              self.homeModules.home-niri
-              self.homeModules.home-dev
-            ];
           };
         };
 

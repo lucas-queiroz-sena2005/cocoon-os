@@ -4,10 +4,7 @@
 
     stylix = {
       enable = true;
-      image = pkgs.fetchurl {
-        url = "https://raw.githubusercontent.com/NixOS/nixpkgs/master/pkgs/data/themes/base16/schemes/classic-dark.yaml";
-        sha256 = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
-      };
+      image = ./assets/wallpaper.png;
 
       base16Scheme = {
         base00 = "000000"; # Void
@@ -42,6 +39,7 @@
       targets = {
         console.enable = true;
         gtk.enable = true;
+        firefox.enable=true;
       };
     };
   };
