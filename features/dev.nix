@@ -1,7 +1,7 @@
 { ... }: {
-  flake.nixosModules.dev = { pkgs, lib, config, ... }: {
+  flake.nixosModules.dev = { pkgs, ... }: {
 
-    # Alacritty configuration via XDG
+    # Alacritty configuration
     environment.etc."alacritty/alacritty.toml".text = ''
       [window]
       padding = { x = 20, y = 20 }
@@ -12,8 +12,8 @@
       foreground = "#E31C25"
 
       [font]
-      size = 14.0
-      normal = { family = "Fixedsys Excelsior", style = "Regular" }
+      size = 13.0
+      normal = { family = "Courier Prime", style = "Regular" }
 
       [[keyboard.bindings]]
       key = "N"
@@ -26,7 +26,7 @@
       action = "None"
     '';
 
-    # Tmux
+    # Multiplier
     programs.tmux = {
       enable = true;
       clock24 = true;
@@ -39,7 +39,7 @@
       '';
     };
 
-    # Development packages
+    # Development tools
     environment.systemPackages = with pkgs; [
       alacritty
       zed-editor
@@ -50,7 +50,7 @@
       tree
     ];
 
-    # Git identity
+    # Ink
     programs.git = {
       enable = true;
       config = {
@@ -60,13 +60,12 @@
       };
     };
 
-    # Shell tools
+    # Navigation
     programs.zoxide = {
       enable = true;
       enableBashIntegration = true;
     };
 
-    # Dynamic Linker for Zed LSPs
     programs.nix-ld.enable = true;
   };
 }

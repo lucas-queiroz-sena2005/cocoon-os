@@ -7,6 +7,10 @@
       self.nixosModules.dev
       self.nixosModules.containers
       self.nixosModules.k3s
+      self.nixosModules.style
+      self.nixosModules.niri
+      self.nixosModules.noctalia
+      self.nixosModules.hardware-acceleration
 
       ({ pkgs, ... }: {
         # Identity
@@ -29,18 +33,13 @@
             STOP_CHARGE_THRESH_BAT0 = 80;
             CPU_SCALING_GOVERNOR_ON_AC = "performance";
             CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
-            USB_AUTOSUSPEND = 0;
           };
         };
 
-        # Desktop environment
+        # Display Manager (Stripped Plasma)
         services.displayManager.sddm.enable = true;
-        services.desktopManager.plasma6.enable = true;
-        services.xserver = {
-          enable = true;
-          xkb = { layout = "br"; model = "pc105"; };
-        };
-        console.useXkbConfig = true;
+        services.displayManager.sddm.wayland.enable = true;
+        # services.desktopManager.plasma6.enable = false; # Plasma removed
 
         # User configuration
         users.users.crow = {
@@ -62,9 +61,6 @@
           enable = true;
           alsa.enable = true;
           pulse.enable = true;
-          wireplumber.extraConfig."10-bluetooth-policy"."wireplumber.settings" = {
-            "bluetooth.autoswitch-to-headset-profile" = false;
-          };
         };
 
         # Keyd remap
@@ -80,6 +76,7 @@
         nix.settings.experimental-features = [ "nix-command" "flakes" ];
         nixpkgs.config.allowUnfree = true;
         programs.firefox.enable = true;
+        services.gnome.gcr-ssh-agent.enable = false;
         programs.ssh.startAgent = true;
 
         system.stateVersion = "25.11";
