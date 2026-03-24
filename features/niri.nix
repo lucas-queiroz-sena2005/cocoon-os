@@ -1,14 +1,12 @@
 { ... }: {
-  flake.nixosModules.niri = { pkgs, ... }: {
-    programs.niri.enable = true;
+  flake.homeModules.home-niri = { pkgs, ... }: {
+    # Direct dotfile management via HM
+    home.file.".config/niri/config.kdl".text = ''
+      let-bind "Mod" "Alt"
 
-    # Global KDL Configuration
-    environment.etc."xdg/niri/config.kdl".text = ''
       input {
           keyboard {
-              xkb {
-                  layout "br"
-              }
+              xkb { layout "br" }
           }
       }
 
@@ -24,37 +22,36 @@
           }
       }
 
-      spawn-at-startup "alacritty"
+      spawn-at-startup "noctalia-shell"
       spawn-at-startup "xwayland-satellite"
-      spawn-at-startup "noctalia"
 
       binds {
           Mod+H { focus-column-left; }
           Mod+L { focus-column-right; }
+          Mod+K { focus-window-up; }
+          Mod+J { focus-window-down; }
+
           Mod+Shift+H { move-column-left; }
           Mod+Shift+L { move-column-right; }
+          Mod+Shift+K { move-window-up; }
+          Mod+Shift+J { move-window-down; }
 
-          Mod+Return { maximize-column; }
-          Mod+F { fullscreen-window; }
-
+          Mod+Return { spawn "alacritty"; }
           Mod+Q { close-window; }
+          Mod+F { fullscreen-window; }
           Mod+Comma { consume-window-into-column; }
           Mod+Period { expel-window-from-column; }
-
           Print { screenshot; }
       }
     '';
 
-    # Portals
-    xdg.portal = {
-      enable = true;
-      extraPortals = [ pkgs.xdg-desktop-portal-gnome ];
-      config.common.default = [ "gnome" ];
-    };
-
-    environment.systemPackages = with pkgs; [
+    home.packages = with pkgs; [
       xwayland-satellite
       wl-clipboard
     ];
+  };
+
+  flake.nixosModules.niri = { pkgs, ... }: {
+    programs.niri.enable = true;
   };
 }

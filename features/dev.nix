@@ -1,32 +1,23 @@
 { ... }: {
-  flake.nixosModules.dev = { pkgs, ... }: {
+  # User level (Home Manager)
+  flake.homeModules.home-dev = { pkgs, ... }: {
+    programs.alacritty = {
+      enable = true;
+      settings = {
+        window.padding = { x = 20; y = 20; };
+        window.decorations = "none";
+      };
+    };
 
-    # Alacritty configuration
-    environment.etc."alacritty/alacritty.toml".text = ''
-      [window]
-      padding = { x = 20, y = 20 }
-      opacity = 1.0
+    programs.git = {
+      enable = true;
+      userName = "Lucas Queiroz Sena";
+      userEmail = "lucas.queiroz.sena.2005@gmail.com";
+      extraConfig = {
+        init.defaultBranch = "main";
+      };
+    };
 
-      [colors.primary]
-      background = "#000000"
-      foreground = "#E31C25"
-
-      [font]
-      size = 13.0
-      normal = { family = "Courier Prime", style = "Regular" }
-
-      [[keyboard.bindings]]
-      key = "N"
-      mods = "Control|Shift"
-      action = "None"
-
-      [[keyboard.bindings]]
-      key = "T"
-      mods = "Control|Shift"
-      action = "None"
-    '';
-
-    # Multiplier
     programs.tmux = {
       enable = true;
       clock24 = true;
@@ -39,9 +30,7 @@
       '';
     };
 
-    # Development tools
-    environment.systemPackages = with pkgs; [
-      alacritty
+    home.packages = with pkgs; [
       zed-editor
       git-lfs
       gh
@@ -49,23 +38,15 @@
       direnv
       tree
     ];
+  };
 
-    # Ink
-    programs.git = {
-      enable = true;
-      config = {
-        init.defaultBranch = "main";
-        user.email = "lucas.queiroz.sena.2005@gmail.com";
-        user.name = "Lucas Queiroz Sena";
-      };
-    };
+  # System level (NixOS)
+  flake.nixosModules.dev = { ... }: {
+    programs.nix-ld.enable = true;
 
-    # Navigation
     programs.zoxide = {
       enable = true;
       enableBashIntegration = true;
     };
-
-    programs.nix-ld.enable = true;
   };
 }

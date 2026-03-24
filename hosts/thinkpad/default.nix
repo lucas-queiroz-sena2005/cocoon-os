@@ -4,56 +4,44 @@
     specialArgs = { inherit self inputs; };
     modules = [
       ./hardware.nix
+      inputs.home-manager.nixosModules.home-manager
       self.nixosModules.dev
-      self.nixosModules.containers
-      self.nixosModules.k3s
       self.nixosModules.style
       self.nixosModules.niri
       self.nixosModules.noctalia
       self.nixosModules.hardware-acceleration
 
-      ({ pkgs, ... }: {
+      ({ pkgs, config, ... }: {
         # Identity
         networking.hostName = "thinkpad";
         time.timeZone = "America/Sao_Paulo";
         i18n.defaultLocale = "en_US.UTF-8";
 
-        # Boot and Kernel
+        # Boot
         boot.loader.systemd-boot.enable = true;
         boot.loader.efi.canTouchEfiVariables = true;
-        boot.kernelParams = [ "psmouse.synaptics_intertouch=0" ];
-        boot.extraModprobeConfig = "options btusb enable_autosuspend=n";
 
-        # Battery management
-        services.power-profiles-daemon.enable = false;
-        services.tlp = {
-          enable = true;
-          settings = {
-            START_CHARGE_THRESH_BAT0 = 75;
-            STOP_CHARGE_THRESH_BAT0 = 80;
-            CPU_SCALING_GOVERNOR_ON_AC = "performance";
-            CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
+        # User and Home Manager Integration
+        users.users.crow = {
+          isNormalUser = true;
+          extraGroups = [ "networkmanager" "wheel" "video" ];
+        };
+
+        home-manager = {
+          useGlobalPkgs = true;
+          useUserPackages = true;
+          extraSpecialArgs = { inherit inputs; };
+          users.crow = {
+            home.stateVersion = "25.11";
+            imports = [
+              self.homeModules.home-niri
+              self.homeModules.home-dev
+            ];
           };
         };
 
-        # Display Manager (Stripped Plasma)
-        services.displayManager.sddm.enable = true;
-        services.displayManager.sddm.wayland.enable = true;
-        # services.desktopManager.plasma6.enable = false; # Plasma removed
-
-        # User configuration
-        users.users.crow = {
-          isNormalUser = true;
-          description = "crow";
-          extraGroups = [ "networkmanager" "wheel" ];
-        };
-
         # Bluetooth
-        hardware.bluetooth = {
-          enable = true;
-          powerOnBoot = true;
-          settings.General.Experimental = true;
-        };
+        hardware.bluetooth.enable = true;
         hardware.enableRedistributableFirmware = true;
 
         # Audio
@@ -63,7 +51,7 @@
           pulse.enable = true;
         };
 
-        # Keyd remap
+        # Keyd
         services.keyd = {
           enable = true;
           keyboards.default = {
@@ -72,12 +60,14 @@
           };
         };
 
-        # System settings
+        # Power
+        services.tlp.enable = true;
+
+        # System
         nix.settings.experimental-features = [ "nix-command" "flakes" ];
         nixpkgs.config.allowUnfree = true;
-        programs.firefox.enable = true;
-        services.gnome.gcr-ssh-agent.enable = false;
-        programs.ssh.startAgent = true;
+        services.displayManager.sddm.enable = true;
+        services.displayManager.sddm.wayland.enable = true;
 
         system.stateVersion = "25.11";
       })

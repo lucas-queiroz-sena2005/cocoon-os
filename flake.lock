@@ -158,18 +158,23 @@
         "type": "gitlab"
       }
     },
-    "import-tree": {
+    "home-manager": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
       "locked": {
-        "lastModified": 1773693634,
-        "narHash": "sha256-BtZ2dtkBdSUnFPPFc+n0kcMbgaTxzFNPv2iaO326Ffg=",
-        "owner": "vic",
-        "repo": "import-tree",
-        "rev": "c41e7d58045f9057880b0d85e1152d6a4430dbf1",
+        "lastModified": 1774368172,
+        "narHash": "sha256-Vdfo8+2SQhgc7i+TCIkBXzypQCFAvNrWvhUkZQtFGKE=",
+        "owner": "nix-community",
+        "repo": "home-manager",
+        "rev": "5068d0b03e8b2cfae58441775aa849b7028a3d39",
         "type": "github"
       },
       "original": {
-        "owner": "vic",
-        "repo": "import-tree",
+        "owner": "nix-community",
+        "repo": "home-manager",
         "type": "github"
       }
     },
@@ -338,7 +343,7 @@
     "root": {
       "inputs": {
         "flake-parts": "flake-parts",
-        "import-tree": "import-tree",
+        "home-manager": "home-manager",
         "nixpkgs": "nixpkgs",
         "noctalia": "noctalia",
         "stylix": "stylix",
