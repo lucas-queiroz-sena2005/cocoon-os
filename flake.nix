@@ -6,6 +6,7 @@
     wrapper-modules.url = "github:BirdeeHub/nix-wrapper-modules";
   };
 
+  # ... inputs stay the same
   outputs = inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } {
     imports = let
       # Identification logic: stop recursing if the set looks like a module
