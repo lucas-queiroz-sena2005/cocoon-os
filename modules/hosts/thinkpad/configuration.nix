@@ -2,7 +2,7 @@
 
 {
   _file = ./configuration.nix;
-  {
+  config ={
     # Identity & Networking
     networking.hostName = "thinkpad-coccon";
     networking.networkmanager.enable = true;
@@ -14,6 +14,11 @@
     boot.extraModprobeConfig = ''
       options btusb enable_autosuspend=n
     '';
+
+    swapDevices = [{
+      device = "/var/lib/swapfile";
+      size = 8192;
+    }];
 
     # Hardware-Specific: TLP Power Management (T14 Battery Health)
     services.power-profiles-daemon.enable = false;
@@ -64,5 +69,5 @@
 
     # Operational Stability
     system.stateVersion = "25.11";
-  }
+  };
 }
