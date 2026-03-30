@@ -11,7 +11,6 @@
     environment.systemPackages = with pkgs; [
       dive
       podman-tui
-      docker-compose
     ];
   };
 }
