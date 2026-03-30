@@ -7,7 +7,6 @@
       self.nixosModules.core
       self.nixosModules.desktop
       self.nixosModules.containers
-      self.nixosModules.wrappers
       self.nixosModules.k3s
       self.nixosModules.dev-cli
       self.nixosModules.dev-gui
