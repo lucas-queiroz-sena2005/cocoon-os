@@ -1,16 +1,25 @@
 { inputs, self, ... }: {
+  # This enables 'flake.wrappers' and 'perSystem.wrappers'
   imports = [ inputs.wrapper-modules.flakeModules.wrappers ];
 
-  flake.wrappers.docker-compose = { pkgs, ... }: {
-    imports = [ inputs.wrapper-modules.wrapperModules.base ];
-    package = pkgs.docker-compose;
-    env.DOCKER_HOST.value = "unix:///run/podman/podman.sock";
-    path = [ pkgs.docker-buildx ];
+  # Global Blueprint (The definition)
+  # FIX: Use '@ args' to avoid name collision with the 'pkgs' option
+  flake.wrappers.docker-compose = { pkgs, ... } @ args: {
+    # Reference the package set explicitly via args.pkgs
+    package = args.pkgs.docker-compose;
+
+    # FIX: Assign the string directly. No .value, no .data.
+    env.DOCKER_HOST = "unix:///run/podman/podman.sock";
+
+    # FIX: Use the 'pkgs' option (suggested by your previous evaluator log)
+    # Referencing args.pkgs.docker-buildx breaks the infinite recursion.
+    pkgs = [ args.pkgs.docker-buildx ];
   };
 
+  # The Aspect (NixOS Implementation)
   flake.nixosModules.wrappers = { pkgs, ... }: {
     environment.systemPackages = [
-      # The library transposes flake.wrappers into standard packages
+      # Standard reference for the transposed package in self.packages
       self.packages.${pkgs.stdenv.hostPlatform.system}.docker-compose
       pkgs.docker-buildx
     ];
