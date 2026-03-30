@@ -6,11 +6,14 @@
     wrapper-modules.url = "github:BirdeeHub/nix-wrapper-modules";
   };
 
-  # FIX: imports must be a flat list. collect returns that list.
   outputs = inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } {
     imports = let
+      # Identification logic: stop recursing if the set looks like a module
+      isModule = v: builtins.isFunction v ||
+                   (builtins.isAttrs v && (v ? imports || v ? config || v ? options || v ? flake || v ? perSystem));
+
       collect = s:
-        if builtins.isAttrs s
+        if builtins.isAttrs s && !isModule s
         then builtins.concatLists (map collect (builtins.attrValues s))
         else [ s ];
     in collect (inputs.import-tree ./modules);

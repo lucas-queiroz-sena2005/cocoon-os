@@ -13,7 +13,6 @@
       bat
       fd
       neovim
-      starship
     ];
 
     programs.zoxide.enable = true;
