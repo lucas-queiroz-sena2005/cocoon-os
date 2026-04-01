@@ -1,4 +1,3 @@
-# modules/dev/cli.nix
 { ... }: {
   flake.nixosModules.dev-cli = { pkgs, ... }: {
     environment.systemPackages = with pkgs; [
@@ -13,7 +12,8 @@
 
     home-manager.users.crow = {
       # Use 26.05 to match your system and silence GTK4 warnings
-      home.stateVersion = "26.05";
+      home.stateVersion = "25.11";
+      gtk.gtk4.theme = null;
 
       programs = {
         zoxide = {
