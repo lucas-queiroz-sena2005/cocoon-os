@@ -6,6 +6,7 @@
       ./_hardware-configuration.nix
       inputs.home-manager.nixosModules.home-manager
       {
+        home-manager.backupFileExtension = "hm-backup";
         home-manager.useGlobalPkgs = true;
         home-manager.useUserPackages = true;
         home-manager.extraSpecialArgs = { inherit inputs self; };
@@ -22,6 +23,8 @@
       self.nixosModules.dev-cli
       self.nixosModules.dev-gui
       self.nixosModules.dev-git
+
+      self.nixosModules.dev-local-ai
     ];
   };
 }
