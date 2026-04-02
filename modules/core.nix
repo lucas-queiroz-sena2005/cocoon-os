@@ -17,11 +17,5 @@
 
     nix.settings.experimental-features = [ "nix-command" "flakes" ];
     nixpkgs.config.allowUnfree = true;
-
-    users.users.crow = {
-      isNormalUser = true;
-      description = "crow";
-      extraGroups = [ "networkmanager" "wheel" ];
-    };
   };
 }

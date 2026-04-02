@@ -1,62 +1,68 @@
 { ... }: {
   flake.nixosModules.dev-cli = { pkgs, ... }: {
     environment.systemPackages = with pkgs; [
-      ripgrep
-      fd
-      jq
-      tealdeer
-      manix
-      wl-clipboard
-      bash-preexec
+      ripgrep fd jq tealdeer manix wl-clipboard bash-preexec
+
+      # Terminal YouTube Matrix
+      ytfzf
+      yt-dlp
+      mpv
+      ueberzugpp # Allows terminal image previews for thumbnails
     ];
 
     home-manager.users.crow = {
-      # Use 26.05 to match your system and silence GTK4 warnings
       home.stateVersion = "25.11";
-      gtk.gtk4.theme = null;
 
       programs = {
-        zoxide = {
-          enable = true;
-          enableBashIntegration = true;
-          options = [ "--cmd cd" ];
-        };
+        zoxide = { enable = true; enableBashIntegration = true; options = [ "--cmd cd" ]; };
+        eza = { enable = true; enableBashIntegration = true; icons = "auto"; };
 
-        eza = {
+        # Fuzzy Finder: Hijacks Bash Tab Completion
+        fzf = {
           enable = true;
           enableBashIntegration = true;
-          icons = "auto";
         };
 
         bash = {
           enable = true;
           enableCompletion = true;
-          # Fixed: proper integration for auto-suggestions
           bashrcExtra = ''
             [[ $- == *i* ]] && source ${pkgs.bash-preexec}/share/bash/bash-preexec.sh
+
+            # ytfzf configuration
+            export YTFZF_PREF="bestvideo[height<=?1080]+bestaudio/best"
+            export YTFZF_ENABLE_FZF_DEFAULT_OPTS=1
           '';
           shellAliases = {
             cat = "bat --style=plain --paging=never";
             preview = "bat --style=full --paging=always";
-            grep = "rg";
-            find = "fd";
-            top = "btop";
-            help = "tldr";
-            opt = "manix";
+            grep = "rg"; find = "fd"; top = "btop"; help = "tldr"; opt = "manix";
             nr = "sudo nixos-rebuild switch --flake .#thinkpad";
-            ns = "nix-shell -p";
-            nd = "nix develop -c $SHELL";
-            ta = "tmux attach || tmux new-session";
-            tl = "tmux list-sessions";
+            ns = "nix-shell -p"; nd = "nix develop -c $SHELL";
+            ta = "tmux attach || tmux new-session"; tl = "tmux list-sessions";
+            tree = "eza --tree --icons"; zed = "zeditor";
+
+            # YouTube Alias
+            yt = "ytfzf -T chafa"; # Plays in mpv, shows thumbnails in terminal
           };
         };
 
-        bat.enable = true;
-        fzf.enable = true;
-        btop.enable = true;
-        tmux.enable = true;
-        neovim.enable = true;
-        starship.enable = true;
+        bat.enable = true; btop.enable = true; neovim.enable = true; starship.enable = true;
+
+        tmux = {
+          enable = true;
+          keyMode = "vi";
+          extraConfig = ''
+            bind | split-window -h
+            bind - split-window -v
+            unbind '"'
+            unbind %
+            bind h select-pane -L
+            bind j select-pane -D
+            bind k select-pane -U
+            bind l select-pane -R
+          '';
+        };
       };
     };
   };

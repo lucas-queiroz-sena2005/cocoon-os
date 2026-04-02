@@ -5,7 +5,6 @@
       ./_configuration.nix
       ./_hardware-configuration.nix
       inputs.home-manager.nixosModules.home-manager
-      inputs.stylix.nixosModules.stylix
       {
         home-manager.useGlobalPkgs = true;
         home-manager.useUserPackages = true;
@@ -14,7 +13,10 @@
       }
       self.nixosModules.core
       self.nixosModules.desktop
-      self.nixosModules.style
+
+      self.nixosModules.style-fonts
+      self.nixosModules.style-plasma
+
       self.nixosModules.containers
       self.nixosModules.k3s
       self.nixosModules.dev-cli
