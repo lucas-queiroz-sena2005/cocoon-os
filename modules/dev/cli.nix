@@ -10,7 +10,7 @@
       ueberzugpp # Allows terminal image previews for thumbnails
     ];
 
-    home-manager.users.crow = {
+    home-manager.users.crow = {...}: {
       home.stateVersion = "25.11";
 
       programs = {
@@ -42,7 +42,7 @@
             ta = "tmux attach || tmux new-session"; tl = "tmux list-sessions";
             tree = "eza --tree --icons"; zed = "zeditor";
 
-            # YouTube Alias
+            # YouTube Aliashttps://github.com/lucas-queiroz-sena2005/cocoon-os/tree/refactor/home-manager
             yt = "ytfzf -T chafa"; # Plays in mpv, shows thumbnails in terminal
           };
         };

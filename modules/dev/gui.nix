@@ -9,12 +9,19 @@
       inputs.zen-browser.packages."${pkgs.system}".default
     ];
 
-    home-manager.users.crow = {
+    home-manager.users.crow = { ... }: {
       xdg.configFile."zed/settings.json".text = builtins.toJSON {
         vim_mode = true;
-        theme = "One Dark";
-        buffer_font_family = "JetBrainsMono Nerd Font";
-        buffer_font_size = 14;
+        icon_theme = "Zed (Default)";
+        ui_font_size = 20;
+        ui_font_family = "Special Elite";
+        buffer_font_size = 18;
+        buffer_font_family = "monospace";
+        theme = {
+          mode = "dark";
+          light = "One Light";
+          dark = "The Dark Side";
+        };
       };
 
       programs.alacritty = {

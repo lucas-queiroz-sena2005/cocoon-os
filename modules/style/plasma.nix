@@ -6,7 +6,8 @@
     home-manager.users.crow = { lib, ... }: {
 
       home.activation.applyPlasmaAesthetics = lib.hm.dag.entryAfter ["writeBoundary"] ''
-        PATH="${pkgs.kdePackages.plasma-workspace}/bin:${pkgs.kdePackages.kgamma}/bin:$PATH"
+      PATH="${pkgs.kdePackages.plasma-workspace}/bin:${pkgs.kdePackages.kgamma}/bin:${pkgs.kdePackages.kconfig}/bin:${pkgs.kdePackages.qttools}/bin:$PATH"
+
 
         # Aesthetics
         $DRY_RUN_CMD plasma-apply-lookandfeel -a org.kde.breezedark.desktop || true
