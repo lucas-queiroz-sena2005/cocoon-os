@@ -47,12 +47,31 @@
           };
         };
 
-        bat.enable = true; btop.enable = true; neovim.enable = true; starship.enable = true;
+        bat.enable = true;
+        btop.enable = true;
+        starship.enable = true;
+        neovim = {
+          enable = true;
+          defaultEditor = true;
+          viAlias = true;
+          vimAlias = true;
+          extraConfig = ''
+            " System clipboard synchronization
+            set clipboard+=unnamedplus
+
+            " True black background and Vi-style cursorline
+            highlight Normal guibg=#000000 ctermbg=black
+            set cursorline
+          '';
+        };
 
         tmux = {
           enable = true;
           keyMode = "vi";
+          baseIndex = 1;
+          shortcut = "a";
           extraConfig = ''
+            setw -g pane-base-index 1
             bind | split-window -h
             bind - split-window -v
             unbind '"'

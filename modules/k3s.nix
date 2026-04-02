@@ -6,6 +6,8 @@
       extraFlags = "--node-ip 127.0.0.1 --bind-address 127.0.0.1";
     };
 
+    systemd.services.k3s.wantedBy = pkgs.lib.mkForce [ ];
+
     networking.firewall.allowedTCPPorts = [ 6443 ];
     environment.systemPackages = with pkgs; [
       kubectl

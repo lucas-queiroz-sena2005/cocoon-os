@@ -6,6 +6,7 @@
       pkgs.bitwarden-desktop
       pkgs.nixd
       pkgs.librewolf
+      pkgs.obsidian
       inputs.zen-browser.packages."${pkgs.system}".default
     ];
 
@@ -17,6 +18,13 @@
         ui_font_family = "Special Elite";
         buffer_font_size = 18;
         buffer_font_family = "monospace";
+        "features" = {
+          "inline_completion_provider" = "none";
+        };
+        "assistant" = {
+          "enabled" = false;
+          "version" = "2";
+        };
         theme = {
           mode = "dark";
           light = "One Light";
