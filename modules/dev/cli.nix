@@ -9,79 +9,104 @@
       mpv
       ueberzugpp # Allows terminal image previews for thumbnails
     ];
+  };
 
-    home-manager.users.crow = {...}: {
-      home.stateVersion = "25.11";
+  flake.homeModules.dev-cli = { pkgs, ... }: {
+    home.stateVersion = "25.11";
 
-      programs = {
-        zoxide = { enable = true; enableBashIntegration = true; options = [ "--cmd cd" ]; };
-        eza = { enable = true; enableBashIntegration = true; icons = "auto"; };
+    programs = {
+      zoxide = { enable = true; enableBashIntegration = true; options = [ "--cmd cd" ]; };
+      eza = { enable = true; enableBashIntegration = true; icons = "auto"; };
 
-        # Fuzzy Finder: Hijacks Bash Tab Completion
-        fzf = {
-          enable = true;
-          enableBashIntegration = true;
+      # Fuzzy Finder: Hijacks Bash Tab Completion
+      fzf = {
+        enable = true;
+        enableBashIntegration = true;
+      };
+
+      bash = {
+        enable = true;
+        enableCompletion = true;
+        bashrcExtra = ''
+          [[ $- == *i* ]] && source ${pkgs.bash-preexec}/share/bash/bash-preexec.sh
+
+          # ytfzf configuration
+          export YTFZF_PREF="bestvideo[height<=?1080]+bestaudio/best"
+          export YTFZF_ENABLE_FZF_DEFAULT_OPTS=1
+        '';
+        shellAliases = {
+          cat = "bat --style=plain --paging=never";
+          preview = "bat --style=full --paging=always";
+          grep = "rg"; find = "fd"; top = "btop"; help = "tldr"; opt = "manix";
+          nr = "sudo nixos-rebuild switch --flake .#thinkpad";
+          ns = "nix-shell -p"; nd = "nix develop -c $SHELL";
+          ta = "tmux attach || tmux new-session"; tl = "tmux list-sessions";
+          tree = "eza --tree --icons"; zed = "zeditor";
+
+          # YouTube Alias
+          yt = "ytfzf -T chafa"; # Plays in mpv, shows thumbnails in terminal
         };
+      };
 
-        bash = {
-          enable = true;
-          enableCompletion = true;
-          bashrcExtra = ''
-            [[ $- == *i* ]] && source ${pkgs.bash-preexec}/share/bash/bash-preexec.sh
+      bat.enable = true;
+      btop.enable = true;
+      starship.enable = true;
 
-            # ytfzf configuration
-            export YTFZF_PREF="bestvideo[height<=?1080]+bestaudio/best"
-            export YTFZF_ENABLE_FZF_DEFAULT_OPTS=1
-          '';
-          shellAliases = {
-            cat = "bat --style=plain --paging=never";
-            preview = "bat --style=full --paging=always";
-            grep = "rg"; find = "fd"; top = "btop"; help = "tldr"; opt = "manix";
-            nr = "sudo nixos-rebuild switch --flake .#thinkpad";
-            ns = "nix-shell -p"; nd = "nix develop -c $SHELL";
-            ta = "tmux attach || tmux new-session"; tl = "tmux list-sessions";
-            tree = "eza --tree --icons"; zed = "zeditor";
+      neovim = {
+        enable = true;
+        defaultEditor = true;
+        viAlias = true;
+        vimAlias = true;
+        extraConfig = ''
+          " System clipboard synchronization
+          set clipboard+=unnamedplus
 
-            # YouTube Aliashttps://github.com/lucas-queiroz-sena2005/cocoon-os/tree/refactor/home-manager
-            yt = "ytfzf -T chafa"; # Plays in mpv, shows thumbnails in terminal
+          " True black background and Vi-style cursorline
+          highlight Normal guibg=#000000 ctermbg=black
+          set cursorline
+        '';
+      };
+
+      helix = {
+        enable = true;
+        settings = {
+          theme = "autumn_night";
+          editor = {
+            line-number = "relative";
+            cursor-shape = {
+              insert = "bar";
+              normal = "block";
+              select = "underline";
+            };
           };
         };
+      };
 
-        bat.enable = true;
-        btop.enable = true;
-        starship.enable = true;
-        neovim = {
-          enable = true;
-          defaultEditor = true;
-          viAlias = true;
-          vimAlias = true;
-          extraConfig = ''
-            " System clipboard synchronization
-            set clipboard+=unnamedplus
-
-            " True black background and Vi-style cursorline
-            highlight Normal guibg=#000000 ctermbg=black
-            set cursorline
-          '';
+      zellij = {
+        enable = true;
+        enableBashIntegration = true;
+        settings = {
+          theme = "dracula";
+          pane_frames = false;
         };
+      };
 
-        tmux = {
-          enable = true;
-          keyMode = "vi";
-          baseIndex = 1;
-          shortcut = "a";
-          extraConfig = ''
-            setw -g pane-base-index 1
-            bind | split-window -h
-            bind - split-window -v
-            unbind '"'
-            unbind %
-            bind h select-pane -L
-            bind j select-pane -D
-            bind k select-pane -U
-            bind l select-pane -R
-          '';
-        };
+      tmux = {
+        enable = true;
+        keyMode = "vi";
+        baseIndex = 1;
+        shortcut = "a";
+        extraConfig = ''
+          setw -g pane-base-index 1
+          bind | split-window -h
+          bind - split-window -v
+          unbind '"'
+          unbind %
+          bind h select-pane -L
+          bind j select-pane -D
+          bind k select-pane -U
+          bind l select-pane -R
+        '';
       };
     };
   };

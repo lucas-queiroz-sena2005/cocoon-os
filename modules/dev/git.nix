@@ -5,13 +5,17 @@
       git-lfs
       gh
     ];
+  };
 
+  flake.homeModules.dev-git = { ... }: {
     programs.git = {
       enable = true;
-      config = {
+      settings = {
+        user = {
+          email = "lucas.queiroz.sena.2005@gmail.com";
+          name = "Lucas Queiroz Sena";
+        };
         init.defaultBranch = "main";
-        user.email = "lucas.queiroz.sena.2005@gmail.com";
-        user.name = "Lucas Queiroz Sena";
       };
     };
   };

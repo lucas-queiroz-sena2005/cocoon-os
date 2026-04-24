@@ -13,7 +13,13 @@
   };
 
   # ... inputs stay the same
-  outputs = inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } {
+  outputs = inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } ({ lib, ... }: {
+    options = {
+      flake.homeModules = lib.mkOption {
+        type = lib.types.lazyAttrsOf lib.types.unspecified;
+        default = {};
+      };
+    };
     imports = let
       # Identification logic: stop recursing if the set looks like a module
       isModule = v: builtins.isFunction v ||
@@ -24,5 +30,5 @@
         then builtins.concatLists (map collect (builtins.attrValues s))
         else [ s ];
     in collect (inputs.import-tree ./modules);
-  };
+  });
 }
