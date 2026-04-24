@@ -20,8 +20,10 @@
     
     # YouTube Matrix
     yt = "ytfzf -T chafa";
-  };
 
+    # System Manual
+    sys-help = "sys-manual";
+    };
   flake.nixosConfigurations.thinkpad = inputs.nixpkgs.lib.nixosSystem {
     specialArgs = { 
       inherit inputs self; 
