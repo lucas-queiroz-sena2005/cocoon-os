@@ -19,5 +19,12 @@
     nixpkgs.config.allowUnfree = true;
 
     system.stateVersion = "25.11";
+
+    console.colors = [
+      "26233a" "eb6f92" "31748f" "f6c177"
+      "9ccfd8" "c4a7e7" "ebbcba" "e0def4"
+      "6e6a86" "eb6f92" "31748f" "f6c177"
+      "9ccfd8" "c4a7e7" "ebbcba" "e0def4"
+    ];
   };
 }

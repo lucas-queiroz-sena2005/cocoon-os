@@ -48,12 +48,27 @@
       ];
     };
 
-  flake.homeModules.dev-base = { cocoon, ... }: {
+  flake.homeModules.dev-base = { cocoon, lib, pkgs, ... }: {
     # Pull from the global host-affiliated aliases passed via specialArgs
     home.shellAliases = cocoon.aliases or {};
 
+    home.activation.cleanThemeCaches = lib.hm.dag.entryAfter ["writeBoundary"] ''
+      $DRY_RUN_CMD rm -rf ~/.cache/starship ~/.cache/bat || true
+    '';
+
     programs.bat.enable = true;
-    programs.btop.enable = true;
+    programs.btop = {
+      enable = true;
+      settings = {
+        color_theme = "rose-pine";
+      };
+    };
+
+    xdg.configFile."btop/themes/rose-pine.theme".source = pkgs.fetchurl {
+      url = "https://raw.githubusercontent.com/rose-pine/btop/main/rose-pine.theme";
+      sha256 = "1injry07mx683f1cy2ks73rdiv4dfi8b5ija8bq6adhbgcw7b1h8";
+    };
+
     programs.zoxide = { enable = true; enableBashIntegration = true; options = [ "--cmd cd" ]; };
     programs.eza = { enable = true; enableBashIntegration = true; icons = "auto"; };
     programs.fzf = { enable = true; enableBashIntegration = true; };

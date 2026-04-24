@@ -9,7 +9,7 @@
       enableBashIntegration = true;
       # Nushell integration is handled via nushell module or manual alias
       settings = {
-        theme = "dracula";
+        theme = "rose-pine";
         pane_frames = false;
         ui.pane_frames.rounded_corners = true;
       };

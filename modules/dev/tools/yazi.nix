@@ -9,6 +9,16 @@
       enableBashIntegration = true;
       enableNushellIntegration = true;
       settings = {
+        opener = {
+          edit = [
+            { run = "hx \"$@\""; block = true; for = "unix"; desc = "Edit with Helix"; }
+          ];
+        };
+        open = {
+          rules = [
+            { mime = "text/*"; use = "edit"; }
+          ];
+        };
         manager = {
           show_hidden = true;
           sort_by = "mtime";

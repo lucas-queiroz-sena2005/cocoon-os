@@ -3,7 +3,7 @@
     programs.helix = {
       enable = true;
       settings = {
-        theme = "autumn_night";
+        theme = "rose_pine";
         editor = {
           line-number = "relative";
           cursor-shape = {

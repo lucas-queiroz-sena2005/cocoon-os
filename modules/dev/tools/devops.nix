@@ -7,6 +7,7 @@
       terraform
       trivy # Security scanner for containers/IaC
       stern # Multi-pod log tailing
+      gemini-cli
     ];
   };
 
