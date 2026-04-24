@@ -33,6 +33,17 @@
       flake.cocoon = config.cocoon;
       # Simple transposition: Inject cocoon from flake-parts into NixOS modules via specialArgs
       _module.args.cocoon = self.cocoon or {};
+      
+      flake.templates = {
+        docs-skill = {
+          path = ./templates/docs-skill;
+          description = "Engineering Documentation & Research Skill Template";
+        };
+        docs-system = {
+          path = ./templates/docs-system;
+          description = "Standardized Engineering Docs & Project Planning Kit";
+        };
+      };
     };
 
     imports = let
