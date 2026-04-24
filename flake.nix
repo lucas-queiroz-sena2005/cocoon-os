@@ -13,13 +13,28 @@
   };
 
   # ... inputs stay the same
-  outputs = inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } ({ lib, ... }: {
+  outputs = inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } ({ lib, self, config, ... }: {
     options = {
       flake.homeModules = lib.mkOption {
         type = lib.types.lazyAttrsOf lib.types.unspecified;
         default = {};
       };
+      cocoon = lib.mkOption {
+        type = lib.types.submodule {
+          options.aliases = lib.mkOption {
+            type = lib.types.attrsOf lib.types.str;
+            default = {};
+          };
+        };
+        default = {};
+      };
     };
+    config = {
+      flake.cocoon = config.cocoon;
+      # Simple transposition: Inject cocoon from flake-parts into NixOS modules via specialArgs
+      _module.args.cocoon = self.cocoon or {};
+    };
+
     imports = let
       # Identification logic: stop recursing if the set looks like a module
       isModule = v: builtins.isFunction v ||
