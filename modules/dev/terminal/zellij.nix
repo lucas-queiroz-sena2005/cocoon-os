@@ -8,6 +8,7 @@
       enable = true;
       enableBashIntegration = true;
       settings = {
+        scroll_mode_editor = "hx";
         pane_frames = true;
         ui = {
           pane_frames = {

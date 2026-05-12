@@ -18,23 +18,20 @@
     nix.settings.experimental-features = [ "nix-command" "flakes" ];
     nixpkgs.config.allowUnfree = true;
 
+    environment.variables.NIXPKGS_ALLOW_UNFREE = "1";
+
     system.stateVersion = "25.11";
 
     # Automated Home Garbage Collection
     # This cleans up stale backup files that block Home Manager activation.
     system.activationScripts.homeCleanup = {
       text = ''
-        find /home/crow -maxdepth 1 -name "*.hm-backup" -delete
-        find /home/crow -maxdepth 1 -name "*.backup" -delete
+        rm -rf /home/crow/*.hm-backup
+        rm -rf /home/crow/*.backup
       '';
       deps = [ "users" ];
     };
 
-    console.colors = [
-      "26233a" "eb6f92" "31748f" "f6c177"
-      "9ccfd8" "c4a7e7" "ebbcba" "e0def4"
-      "6e6a86" "eb6f92" "31748f" "f6c177"
-      "9ccfd8" "c4a7e7" "ebbcba" "e0def4"
-    ];
+    console.useXkbConfig = true; # Use XKB config for console
   };
 }

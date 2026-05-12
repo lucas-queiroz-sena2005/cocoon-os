@@ -2,6 +2,7 @@
   # Added inputs to access the Zen flake
   flake.nixosModules.dev-gui = { pkgs, inputs, ... }: {
     environment.systemPackages = [
+      pkgs.alacritty
       pkgs.zed-editor
       pkgs.bitwarden-desktop
       pkgs.nixd
@@ -13,7 +14,9 @@
     programs.nix-ld.enable = true;
   };
 
-  flake.homeModules.dev-gui = { ... }: {
+  flake.homeModules.dev-gui = { config, lib, ... }: {
+    stylix.targets.vesktop.enable = lib.mkDefault true;
+
     xdg.configFile."zed/settings.json".text = builtins.toJSON {
       vim_mode = true;
       icon_theme = "Zed (Default)";
@@ -31,13 +34,11 @@
       theme = {
         mode = "dark";
         light = "One Light";
-        dark = "Rosé Pine";
+        dark = "Ayu Dark";
       };
     };
 
-    xdg.configFile."vesktop/settings/quickCss.css".text = ''
-      @import url("https://rosepinetheme.github.io/discord/rose-pine.css");
-    '';
+    # Removed hardcoded Vesktop quickCss since Stylix handles it now
 
     programs.alacritty = {
       enable = true;

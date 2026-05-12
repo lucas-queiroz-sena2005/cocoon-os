@@ -46,8 +46,21 @@
   };
 
   # HOME MANAGER LEVEL (For non-NixOS or standalone use)
-  flake.homeModules.style-theme-rose-pine = { inputs, ... }: {
-    imports = [ inputs.stylix.homeManagerModules.stylix ];
-    stylix.enable = true;
+  flake.homeModules.style-theme-rose-pine = { config, lib, inputs, pkgs, ... }: {
+    # Set GTK icon theme correctly at the home-manager level
+    gtk = {
+      enable = true;
+      iconTheme = {
+        package = pkgs.papirus-icon-theme;
+        name = "Papirus-Dark";
+      };
+    };
+
+    home.activation.applyStylixPlasmaTheme = lib.hm.dag.entryAfter ["applyPlasmaAesthetics"] ''
+      PATH="${pkgs.kdePackages.plasma-workspace}/bin:${pkgs.kdePackages.kconfig}/bin:${pkgs.papirus-folders}/bin:$PATH"
+      $DRY_RUN_CMD plasma-apply-colorscheme stylix || true
+      $DRY_RUN_CMD kwriteconfig6 --file kdeglobals --group General --key ColorScheme "stylix"
+      $DRY_RUN_CMD papirus-folders -C grey --theme Papirus-Dark || true
+    '';
   };
 }

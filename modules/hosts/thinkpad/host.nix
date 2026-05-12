@@ -45,6 +45,10 @@
 
           users.crow = {
             home.stateVersion = "25.11";
+            home.sessionVariables = {
+              EDITOR = "hx";
+              VISUAL = "hx";
+            };
             imports = [
               # System Layout
               self.homeModules.layout-mechanical-xdg
@@ -68,6 +72,7 @@
               self.homeModules.dev-tools-yazi
               self.homeModules.dev-tools-devops
               self.homeModules.dev-tools-gemini
+              self.homeModules.dev-tools-slack
 
               # Aesthetics
               self.homeModules.style-plasma
@@ -89,6 +94,7 @@
       self.nixosModules.dev-tools-yazi
       self.nixosModules.dev-tools-devops
       self.nixosModules.dev-tools-gemini
+      self.nixosModules.dev-tools-slack
 
       # System aesthetics
       self.nixosModules.style-plasma

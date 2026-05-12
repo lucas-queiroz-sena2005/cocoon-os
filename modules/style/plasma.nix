@@ -35,10 +35,15 @@
         # --- BEHAVIOR & LAYOUT (Always Apply) ---
         $DRY_RUN_CMD plasma-apply-wallpaperimage ${../assets/wallpaper.png} || true
         $DRY_RUN_CMD kwriteconfig6 --file kwinrc --group Desktops --key Number 3
+        $DRY_RUN_CMD kwriteconfig6 --file kwinrc --group Desktops --key Rows 1
+        $DRY_RUN_CMD kwriteconfig6 --file kwinrc --group Desktops --key Columns 3
         $DRY_RUN_CMD kwriteconfig6 --file kdeglobals --group General --key TerminalApplication "alacritty"
 
+        # Taskbar: Auto-hide (visibilityMode 1)
+        $DRY_RUN_CMD kwriteconfig6 --file plasmashellrc --group "Panels" --group "Panel 1" --key "visibilityMode" 1
+
         # Shortcuts & Vi-Keys
-        $DRY_RUN_CMD kwriteconfig6 --file kglobalshortcutsrc --group "services/org.kde.alacritty.desktop" --key "_launch" "Ctrl+Alt+T\tMeta+Return,none,Alacritty"
+        $DRY_RUN_CMD kwriteconfig6 --file kglobalshortcutsrc --group "services/Alacritty.desktop" --key "_launch" "Ctrl+Alt+T${"\t"}Meta+Return,none,Alacritty"
         
         # Spectacle (PrintScreen) - Support both legacy and Plasma 6 names
         $DRY_RUN_CMD kwriteconfig6 --file kglobalshortcutsrc --group org.kde.spectacle.desktop --key "RectangularRegionScreenShot" "Meta+Shift+S,none,Capture Rectangular Region"
