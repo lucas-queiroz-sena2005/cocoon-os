@@ -110,7 +110,7 @@
         magenta = [ 210 166 255 ];
         cyan = [ 115 184 255 ];
         white = [ 255 255 255 ];
-        orange = [ 170 217 76 ]; # Swap: Orange value is now green
+        orange = [ 255 135 50 ]; 
       };
     };
   };

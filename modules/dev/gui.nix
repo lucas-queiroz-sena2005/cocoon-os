@@ -6,9 +6,7 @@
       pkgs.zed-editor
       pkgs.bitwarden-desktop
       pkgs.nixd
-      pkgs.librewolf
       pkgs.vesktop # Replaced obsidian with discord/vesktop
-      inputs.zen-browser.packages."${pkgs.system}".default
     ];
 
     programs.nix-ld.enable = true;

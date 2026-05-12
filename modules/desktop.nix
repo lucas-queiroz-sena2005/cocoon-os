@@ -1,6 +1,7 @@
 { ... }: {
   flake.nixosModules.desktop = { pkgs, ... }: {
     services.xserver.enable = true; #
+    services.libinput.touchpad.naturalScrolling = true;
     services.displayManager.sddm.enable = true; #
     services.desktopManager.plasma6.enable = true; #
 
@@ -12,7 +13,6 @@
     }; #
 
     services.printing.enable = true; #
-    programs.firefox.enable = true; #
     
     # Bluetooth stack support
     hardware.bluetooth.enable = true;

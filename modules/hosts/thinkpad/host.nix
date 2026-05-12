@@ -73,6 +73,7 @@
               self.homeModules.dev-tools-devops
               self.homeModules.dev-tools-gemini
               self.homeModules.dev-tools-slack
+              self.homeModules.dev-tools-firefox
 
               # Aesthetics
               self.homeModules.style-plasma
