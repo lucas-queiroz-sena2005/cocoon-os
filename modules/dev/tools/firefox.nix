@@ -37,7 +37,7 @@
               definedAliases = [ "@np" ];
             };
             "Startpage" = {
-              urls = [{ template = "https://www.startpage.com/sp/search?query={searchTerms}"; }];
+              urls = [{ template = "https://www.startpage.com/sp/search?query={searchTerms}&lui=english&language=english"; }];
             };
             "Google".metaData.alias = "@g";
           };
