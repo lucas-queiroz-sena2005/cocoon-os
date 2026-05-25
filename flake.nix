@@ -14,6 +14,10 @@
       url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    antigravity-nix = {
+      url = "github:jacopone/antigravity-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   # ... inputs stay the same
@@ -38,18 +42,6 @@
       # Simple transposition: Inject cocoon from flake-parts into NixOS modules via specialArgs
       _module.args.cocoon = self.cocoon or {};
 
-      flake.homeConfigurations."crow@ubuntu-test" = inputs.home-manager.lib.homeManagerConfiguration {
-        pkgs = inputs.nixpkgs.legacyPackages."x86_64-linux";
-        extraSpecialArgs = { inherit inputs self; };
-        modules = [
-          {
-            home.username = "root";
-            home.homeDirectory = "/root";
-            home.stateVersion = "25.11";
-          }
-          self.homeModules.dev-git
-        ];
-      };
       
       flake.templates = {};
     };

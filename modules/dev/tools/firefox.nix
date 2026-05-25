@@ -32,14 +32,14 @@
                   { name = "query"; value = "{searchTerms}"; }
                 ];
               }];
-              iconUpdateURL = "https://nixos.org/favicon.png";
+              icon = "https://nixos.org/favicon.png";
               updateInterval = 24 * 60 * 60 * 1000;
               definedAliases = [ "@np" ];
             };
             "Startpage" = {
               urls = [{ template = "https://www.startpage.com/sp/search?query={searchTerms}&lui=english&language=english"; }];
             };
-            "Google".metaData.alias = "@g";
+            "google".metaData.alias = "@g";
           };
         };
 
@@ -59,11 +59,32 @@
           "network.dns.disableIPv6" = true;
           "privacy.firstparty.isolate" = true;
           "network.cookie.cookieBehavior" = 5;
+
+          # --- TELEMETRY & DATA COLLECTION ---
+          "datareporting.healthreport.uploadEnabled" = false;
+          "datareporting.policy.dataSubmissionEnabled" = false;
+          "toolkit.telemetry.enabled" = false;
+          "toolkit.telemetry.unified" = false;
+          "toolkit.telemetry.server" = "data:,";
+          "toolkit.telemetry.archive.enabled" = false;
+          "toolkit.telemetry.newProfilePing.enabled" = false;
+          "toolkit.telemetry.shutdownPingSender.enabled" = false;
+          "toolkit.telemetry.updatePing.enabled" = false;
+          "toolkit.telemetry.bhrPing.enabled" = false;
+          "toolkit.telemetry.firstShutdownPing.enabled" = false;
+          "toolkit.telemetry.coverage.opt-out" = true;
+          "toolkit.coverage.opt-out" = true;
+          "toolkit.coverage.endpoint.base" = "";
+          "browser.newtabpage.activity-stream.feeds.telemetry" = false;
+          "browser.ping-centre.telemetry" = false;
           
           # --- BLOAT REMOVAL ---
           "browser.ml.enable" = false;
           "browser.ml.chat.enabled" = false;
           "browser.ml.voice.enabled" = false;
+          "browser.urlbar.suggest.quicksuggest.nonsponsored" = false;
+          "browser.urlbar.suggest.quicksuggest.sponsored" = false;
+          "browser.urlbar.suggest.searches" = false;
           "browser.topsites.controversial.enabled" = false;
           "browser.newtabpage.activity-stream.showSponsored" = false;
           "browser.newtabpage.activity-stream.showSponsoredTopSites" = false;
@@ -76,13 +97,7 @@
         };
 
         userChrome = ''
-          /* Zen-like Minimalist UI with Ayu Evolve Palette */
-          :root {
-            --ayu-bg: #020202;
-            --ayu-fg: #dedede;
-            --ayu-accent: #ff8732; /* Ayu Orange */
-            --ayu-border: #1c1c1c;
-          }
+          /* Zen-like Minimalist UI */
 
           /* Hide native horizontal tabs for Sidebery */
           #TabsToolbar { visibility: collapse !important; }
@@ -92,32 +107,10 @@
           
           /* Sidebar Splitter Cleanliness */
           #sidebar-splitter { border: none !important; width: 1px !important; opacity: 0 !important; }
-
-          /* Theming the URL Bar (Always Visible) */
-          #nav-bar {
-            background: var(--ayu-bg) !important;
-            border-bottom: 1px solid var(--ayu-border) !important;
-            box-shadow: none !important;
-          }
-
-          /* Browser Content Area styling */
-          #webext-panels-stack,
-          #appcontent {
-            border-radius: 12px !important;
-            border: 1px solid var(--ayu-border) !important;
-            overflow: hidden !important;
-            margin: 8px !important;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.5) !important;
-          }
-
-          /* Active focus border - subtle orange highlight */
-          #appcontent:focus-within {
-            border-color: var(--ayu-accent) !important;
-          }
         '';
 
         userContent = ''
-          /* Upscale and Theme Sidebery UI */
+          /* Upscale Sidebery UI */
           @-moz-document url-prefix("moz-extension://") {
             :root {
               --tabs-font: 15px "${config.stylix.fonts.monospace.name}", monospace !important;
@@ -125,18 +118,11 @@
               --tabs-inner-gap: 10px !important;
               --tabs-pinned-height: 48px !important;
               --tabs-pinned-width: 48px !important;
-              
-              /* Ayu Evolve Colors for Sidebery */
-              --bg: #020202 !important;
-              --fg: #dedede !important;
-              --act-bg: #ff8732 !important;
-              --act-fg: #020202 !important;
             }
             
             .Tab .title {
               font-size: 15px !important;
               font-weight: 500 !important;
-              color: var(--fg) !important;
             }
 
             .Tab .fav {
@@ -155,16 +141,7 @@
               height: 24px !important;
             }
 
-            .Tab:hover {
-              background: #111111 !important;
-            }
-
-            .Tab[data-active="true"] {
-              background: var(--act-bg) !important;
-            }
-
             .Tab[data-active="true"] .title {
-              color: var(--act-fg) !important;
               font-weight: 700 !important;
             }
           }

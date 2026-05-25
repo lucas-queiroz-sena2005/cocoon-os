@@ -17,7 +17,7 @@
     # System and utilities
     nr = "sudo nixos-rebuild switch --flake .#thinkpad";
     yt = "ytfzf -T chafa";
-    agy = "antigravity";
+    agy = "antigravity-cli";
     sys-help = "sys-manual";
   };
 
@@ -74,6 +74,7 @@
               self.homeModules.dev-tools-devops
               self.homeModules.dev-tools-gemini
               self.homeModules.dev-tools-antigravity
+              self.homeModules.dev-tools-antigravity-cli
               self.homeModules.dev-tools-slack
               self.homeModules.dev-tools-firefox
 
@@ -98,6 +99,7 @@
       self.nixosModules.dev-tools-devops
       self.nixosModules.dev-tools-gemini
       self.nixosModules.dev-tools-antigravity
+      self.nixosModules.dev-tools-antigravity-cli
       self.nixosModules.dev-tools-slack
 
       # System aesthetics

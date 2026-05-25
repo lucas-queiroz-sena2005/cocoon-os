@@ -1,10 +1,13 @@
-
-{ ... }: {
+{ inputs, ... }: {
   flake.nixosModules.dev-tools-antigravity = { pkgs, ... }: {
-    environment.systemPackages = [ pkgs.antigravity ];
+    environment.systemPackages = [
+      inputs.antigravity-nix.packages.${pkgs.system}.default
+    ];
   };
 
   flake.homeModules.dev-tools-antigravity = { pkgs, ... }: {
-    home.packages = [ pkgs.antigravity ];
+    home.packages = [
+      inputs.antigravity-nix.packages.${pkgs.system}.default
+    ];
   };
 }

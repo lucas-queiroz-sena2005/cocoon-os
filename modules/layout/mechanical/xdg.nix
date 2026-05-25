@@ -13,6 +13,7 @@
       userDirs = {
         enable = true;
         createDirectories = true;
+        setSessionVariables = false;
 
         # Keep XDG Redirection for personal data to the Mechanical Schema
         download    = "${config.home.homeDirectory}/Volatile/Downloads";
