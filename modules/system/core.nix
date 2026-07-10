@@ -16,6 +16,15 @@
     };
 
     nix.settings.experimental-features = [ "nix-command" "flakes" ];
+    nix.settings.auto-optimise-store = true; # Automatically hardlink identical files
+
+    # Automatic Garbage Collection
+    nix.gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 14d";
+    };
+
     nixpkgs.config.allowUnfree = true;
     programs.nix-ld.enable = true;
 
