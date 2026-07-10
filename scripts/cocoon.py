@@ -41,7 +41,7 @@ def interactive_menu(title, options, filterable=False, help_text=None, multi_sel
     search_query = ""
     selected = 0
     toggled = set(initial_toggled) if initial_toggled else set()
-    
+
     while True:
         # Filter options
         if filterable and search_query:
@@ -54,7 +54,7 @@ def interactive_menu(title, options, filterable=False, help_text=None, multi_sel
 
         os.system('tput civis')  # hide cursor
         print('\033[H\033[J', end='')  # clear screen
-        
+
         if draw_box:
             print(f"\033[1;35m╭{'─' * (len(title) + 2)}╮\033[0m")
             print(f"\033[1;35m│ \033[1;37m{title}\033[1;35m │\033[0m")
@@ -80,11 +80,11 @@ def interactive_menu(title, options, filterable=False, help_text=None, multi_sel
             for i in range(start_idx, end_idx):
                 opt = filtered_options[i]
                 orig_idx = options.index(opt)
-                
+
                 prefix = ""
                 if multi_select:
                     prefix = "\033[1;32m[x]\033[0m " if orig_idx in toggled else "\033[90m[ ]\033[0m "
-                    
+
                 if i == selected:
                     print(f"  \033[1;32m❯\033[0m {prefix}\033[1;37m{opt}\033[0m")
                 else:
@@ -99,7 +99,7 @@ def interactive_menu(title, options, filterable=False, help_text=None, multi_sel
             print("\n\033[90m[ ↑/↓: Navigate ] [ Enter: Select ] [ ←: Back ] [ Esc: Exit ]\033[0m")
             if not filterable:
                 print("\033[90m[ k/j: Navigate ] [ l: Select ] [ h: Back ] (Vim Bindings)\033[0m")
-                
+
         sys.stdout.flush()
 
         try:
@@ -140,7 +140,7 @@ def interactive_menu(title, options, filterable=False, help_text=None, multi_sel
                 print('\033[H\033[J', end='')
                 return None
             # Backspace
-            elif ch == '\x7f' or ch == '\b':  
+            elif ch == '\x7f' or ch == '\b':
                 if filterable:
                     search_query = search_query[:-1]
                     selected = 0
@@ -190,7 +190,7 @@ def get_all_modules(root, category_filter=None):
             continue
         if category_filter and cat not in category_filter:
             continue
-            
+
         files = [f for f in os.listdir(cat_path) if f.endswith('.nix')]
         for f in sorted(files):
             attr = f"{cat}-{f[:-4]}"
@@ -234,7 +234,7 @@ def commit_and_push(root):
     msg = get_input("Enter commit message (or press Enter to abort): ")
     if not msg:
         return False
-        
+
     print("\n\033[1;36mExecuting git commands...\033[0m\n")
     try:
         subprocess.run(["git", "add", "."], cwd=root, check=True)
@@ -294,10 +294,10 @@ def manage_host_modules(root, category_filter, menu_title):
         options.append(f"{m} \033[90m({mod_info['type']})\033[0m")
 
     selected_indices = interactive_menu(
-        menu_title, 
-        options, 
-        filterable=True, 
-        multi_select=True, 
+        menu_title,
+        options,
+        filterable=True,
+        multi_select=True,
         initial_toggled=active_indices,
         help_text=f"Editing modules for host: {host}"
     )
@@ -326,15 +326,15 @@ def manage_host_modules(root, category_filter, menu_title):
     # 2. Apply Additions
     lines = new_lines
     new_lines = []
-    
+
     # We need to inject the additions in the correct places.
     home_injections = []
     nixos_injections = []
-    
+
     for i in to_add:
         m = module_names[i]
         mod_info = all_modules[m]
-        
+
         if mod_info['type'] in ['both', 'home']:
             home_injections.append(f"              self.homeModules.{m}\n")
         if mod_info['type'] in ['both', 'nixos']:
@@ -343,31 +343,31 @@ def manage_host_modules(root, category_filter, menu_title):
     in_home_block = False
     in_home_imports = False
     in_nixos_block = False
-    
+
     for line in lines:
         if "home-manager.users" in line:
             in_home_block = True
         if in_home_block and "imports = [" in line:
             in_home_imports = True
-            
+
         # Inject home modules right before the closing bracket of home imports
         if in_home_block and in_home_imports and "];" in line and home_injections:
             new_lines.extend(home_injections)
             home_injections = []
-            
+
         # Inject nixos modules right before the closing bracket of the main imports
         if "imports = [" in line and not in_home_block:
             in_nixos_block = True
-            
+
         if in_nixos_block and not in_home_block and "];" in line and nixos_injections:
             new_lines.extend(nixos_injections)
             nixos_injections = []
-            
+
         new_lines.append(line)
 
     with open(host_file, 'w') as f:
         f.writelines(new_lines)
-        
+
     print('\033[H\033[J', end='')
     success(f"Batch update applied to {host}!")
     print(f"  \033[32mAdded:\033[0m {len(to_add)}")
@@ -453,11 +453,11 @@ def delete_module(root):
 
 def main():
     root = find_flake_root()
-    
+
     banner = """\033[1;36m
-   ____                             
-  / ___|___   ___ ___   ___  _ __  
- | |   / _ \\ / __/ _ \\ / _ \\| '_ \\ 
+   ____
+  / ___|___   ___ ___   ___  _ __
+ | |   / _ \\ / __/ _ \\ / _ \\| '_ \\
  | |__| (_) | (_| (_) | (_) | | | |
   \\____\\___/ \\___\\___/ \\___/|_| |_|
 \033[0m\033[1;35m      NixOS Configuration Manager\033[0m
@@ -472,9 +472,9 @@ def main():
             "Build System (nixos-rebuild)",
             "Commit & Push Changes"
         ]
-        
+
         idx = interactive_menu(banner, choices, draw_box=False)
-        
+
         if idx is None:
             print('\033[H\033[J', end='')
             sys.exit(0)
@@ -491,6 +491,7 @@ def main():
             rebuild_system(root)
         elif idx == 5:
             commit_and_push(root)
+
 
 if __name__ == '__main__':
     main()
