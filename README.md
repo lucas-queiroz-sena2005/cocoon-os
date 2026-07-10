@@ -2,6 +2,11 @@
 
 A highly atomized NixOS configuration using the **Dendritic Pattern**.
 
+## Quick Start & Documentation
+- [How-To Guide](docs/HOWTO.md): Practical steps for adding tools, aliases, and managing the system.
+- [System Manual](docs/manual.md): The active command-line manual (`sys-manual`).
+- [Architecture Details](docs/arch/dendritic.md): Explanation of the underlying design pattern.
+
 ## Architecture: The Dendritic Pattern
 
 This repository uses `import-tree` to automatically discover and export modules. The "dendrite" grows from the `modules/` directory:

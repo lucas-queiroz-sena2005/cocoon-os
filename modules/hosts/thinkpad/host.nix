@@ -1,25 +1,5 @@
 { self, inputs, ... }: {
-  # Host-specific aliases
-  cocoon.aliases = {
-    # Modern tool overrides
-    cat = "bat --style=plain --paging=never";
-    grep = "rg";
-    find = "fd";
-    top = "btop";
-    help = "tldr";
-    opt = "manix";
-    tree = "eza --tree --icons";
-    ls = "eza --icons";
-    cd = "z";
-    vi = "hx";
-    vim = "hx";
 
-    # System and utilities
-    nr = "sudo nixos-rebuild switch --flake .#thinkpad";
-    yt = "ytfzf -T chafa";
-    agy = "antigravity-cli";
-    sys-help = "sys-manual";
-  };
 
   flake.nixosConfigurations.thinkpad = inputs.nixpkgs.lib.nixosSystem {
     specialArgs = {
@@ -31,6 +11,10 @@
       # Hardware and base configuration
       ./_configuration.nix
       ./_hardware-configuration.nix
+
+      # System Options
+      self.nixosModules.system-options
+      { cocoon = { defaultTerminal = "ghostty"; defaultEditor = "hx"; }; }
 
       # Home Manager configuration
       inputs.home-manager.nixosModules.home-manager
@@ -45,6 +29,7 @@
           };
 
           users.crow = {
+            cocoon = { defaultTerminal = "ghostty"; defaultEditor = "hx"; };
             home.stateVersion = "25.11";
             home.sessionVariables = {
               EDITOR = "hx";
@@ -52,59 +37,66 @@
             };
             imports = [
               # System Layout
-              self.homeModules.layout-mechanical-xdg
-              self.homeModules.layout-mechanical-systemd
+              self.homeModules.layout-xdg
+              self.homeModules.layout-systemd
 
               # Core and Development
-              self.homeModules.dev-base
-              self.homeModules.dev-git
-              self.homeModules.dev-gui
+              self.homeModules.system-options
+              self.homeModules.cli-base
+              self.homeModules.cli-git
+              self.homeModules.apps-zed
+              self.homeModules.apps-bitwarden
+              self.homeModules.apps-vesktop
+              self.homeModules.apps-ghostty
 
               # Shell and Terminal
-              self.homeModules.dev-shell-bash
-              self.homeModules.dev-shell-starship
-              self.homeModules.dev-terminal-zellij
+              self.homeModules.cli-bash
+              self.homeModules.cli-starship
+              self.homeModules.cli-zellij
 
               # Editors
-              self.homeModules.dev-editors-neovim
-              self.homeModules.dev-editors-helix
+              self.homeModules.dev-neovim
+              self.homeModules.dev-helix
 
               # Toolset
-              self.homeModules.dev-tools-yazi
-              self.homeModules.dev-tools-devops
-              self.homeModules.dev-tools-gemini
-              self.homeModules.dev-tools-antigravity
-              self.homeModules.dev-tools-antigravity-cli
-              self.homeModules.dev-tools-slack
-              self.homeModules.dev-tools-firefox
+              self.homeModules.cli-yazi
+              self.homeModules.dev-devops
+              self.homeModules.dev-antigravity
+              self.homeModules.dev-antigravity-cli
+              self.homeModules.dev-cocoon
+              self.homeModules.apps-slack
+              self.homeModules.apps-firefox
 
               # Aesthetics
               self.homeModules.style-plasma
-              self.homeModules.style-theme-ayu-evolve
+              self.homeModules.style-gruvbox-light
             ];
           };
         };
       }
 
       # System-level modules
-      self.nixosModules.core
-      self.nixosModules.desktop
-      self.nixosModules.containers
+      self.nixosModules.system-core
+      self.nixosModules.system-desktop
+      self.nixosModules.services-containers
 
       # Hardware/Dev features
-      self.nixosModules.dev-base
-      self.nixosModules.dev-gui
-      self.nixosModules.dev-terminal-zellij
-      self.nixosModules.dev-tools-yazi
-      self.nixosModules.dev-tools-devops
-      self.nixosModules.dev-tools-gemini
-      self.nixosModules.dev-tools-antigravity
-      self.nixosModules.dev-tools-antigravity-cli
-      self.nixosModules.dev-tools-slack
+      self.nixosModules.cli-base
+      self.nixosModules.apps-zed
+      self.nixosModules.apps-bitwarden
+      self.nixosModules.apps-vesktop
+      self.nixosModules.apps-ghostty
+      self.nixosModules.cli-zellij
+      self.nixosModules.cli-yazi
+      self.nixosModules.dev-devops
+      self.nixosModules.dev-antigravity
+      self.nixosModules.dev-antigravity-cli
+      self.nixosModules.dev-cocoon
+      self.nixosModules.apps-slack
 
       # System aesthetics
       self.nixosModules.style-plasma
-      self.nixosModules.style-theme-ayu-evolve
+      self.nixosModules.style-gruvbox-light
     ];
   };
 }

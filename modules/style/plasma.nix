@@ -7,6 +7,12 @@
     let
       # Only apply manual aesthetics if Stylix is NOT enabled
       noStylix = !(config.stylix.enable or false);
+      
+      # Determine default terminal and desktop shortcut
+      termName = config.cocoon.defaultTerminal or "ghostty";
+      termDesktop = if termName == "ghostty" then "com.mitchellh.ghostty.desktop"
+                    else if termName == "alacritty" then "Alacritty.desktop"
+                    else "${termName}.desktop";
     in {
       home.packages = [ pkgs.papirus-icon-theme pkgs.papirus-folders ];
       
@@ -33,7 +39,7 @@
         ''}
 
         # --- BEHAVIOR & LAYOUT (Always Apply) ---
-        $DRY_RUN_CMD plasma-apply-wallpaperimage ${../assets/wallpaper.png} || true
+        $DRY_RUN_CMD plasma-apply-wallpaperimage ${../../assets/wallpaper.png} || true
         $DRY_RUN_CMD kwriteconfig6 --file kwinrc --group Desktops --key Number 3
         $DRY_RUN_CMD kwriteconfig6 --file kwinrc --group Desktops --key Rows 1
         $DRY_RUN_CMD kwriteconfig6 --file kwinrc --group Desktops --key Columns 3
@@ -42,19 +48,19 @@
         $DRY_RUN_CMD kwriteconfig6 --file kwinrc --group "Plugins" --key "slideEnabled" false
         $DRY_RUN_CMD kwriteconfig6 --file kwinrc --group "Plugins" --key "fadedesktopEnabled" false
 
-        $DRY_RUN_CMD kwriteconfig6 --file kdeglobals --group General --key TerminalApplication "alacritty"
+        $DRY_RUN_CMD kwriteconfig6 --file kdeglobals --group General --key TerminalApplication "${termName}"
 
         # Input: Natural Scrolling (Inverted)
         $DRY_RUN_CMD kwriteconfig6 --file kcminputrc --group "Mouse" --key "NaturalScroll" true
         $DRY_RUN_CMD kwriteconfig6 --file kcminputrc --group "Touchpad" --key "NaturalScrolling" true
         $DRY_RUN_CMD kwriteconfig6 --file kcminputrc --group "Libinput" --group "Default" --key "NaturalScrolling" true
 
-        # Taskbar: Auto-hide (visibilityMode 1) - Target the bottom panel specifically
-        $DRY_RUN_CMD kwriteconfig6 --file plasmashellrc --group "Panels" --group "Panel 1" --key "visibilityMode" 1
-        $DRY_RUN_CMD qdbus org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.evaluateScript "let allPanels = panels(); for (var i = 0; i < allPanels.length; i++) { if (allPanels[i].location === 'bottom') { allPanels[i].visibilityMode = 1; } }" || true
+        # Taskbar: Auto-hide - Target the bottom panel specifically
+        $DRY_RUN_CMD kwriteconfig6 --file plasmashellrc --group "Panels" --group "Panel 1" --key "hiding" "autohide"
+        $DRY_RUN_CMD qdbus org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.evaluateScript "let allPanels = panels(); for (var i = 0; i < allPanels.length; i++) { if (allPanels[i].location === 'bottom') { allPanels[i].hiding = 'autohide'; } }" || true
 
         # Shortcuts & Vi-Keys
-        $DRY_RUN_CMD kwriteconfig6 --file kglobalshortcutsrc --group "services/Alacritty.desktop" --key "_launch" "Ctrl+Alt+T${"\t"}Meta+Return,none,Alacritty"
+        $DRY_RUN_CMD kwriteconfig6 --file kglobalshortcutsrc --group "services/${termDesktop}" --key "_launch" "Ctrl+Alt+T${"\t"}Meta+Return,none,${termName}"
         
         # Spectacle (PrintScreen) - Support both legacy and Plasma 6 names
         $DRY_RUN_CMD kwriteconfig6 --file kglobalshortcutsrc --group org.kde.spectacle.desktop --key "RectangularRegionScreenShot" "Meta+Shift+S,none,Capture Rectangular Region"
