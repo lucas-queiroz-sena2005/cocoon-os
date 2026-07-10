@@ -12,6 +12,7 @@ except ImportError:
 
 # --- TUI Helpers ---
 
+
 def get_char():
     import termios
     import tty
@@ -66,7 +67,8 @@ def interactive_menu(title, options, filterable=False, help_text=None, multi_sel
             print(f"\033[90m{help_text}\033[0m\n")
 
         if filterable:
-            print(f"  \033[1;36mSearch:\033[0m \033[1;37m{search_query}\033[5m_\033[0m\n")
+            print(
+                f"  \033[1;36mSearch:\033[0m \033[1;37m{search_query}\033[5m_\033[0m\n")
 
         if not filtered_options:
             print("    \033[90m(No matches found)\033[0m")
@@ -86,19 +88,24 @@ def interactive_menu(title, options, filterable=False, help_text=None, multi_sel
                     prefix = "\033[1;32m[x]\033[0m " if orig_idx in toggled else "\033[90m[ ]\033[0m "
 
                 if i == selected:
-                    print(f"  \033[1;32m❯\033[0m {prefix}\033[1;37m{opt}\033[0m")
+                    print(
+                        f"  \033[1;32m❯\033[0m {prefix}\033[1;37m{opt}\033[0m")
                 else:
                     print(f"    {prefix}\033[90m{opt}\033[0m")
 
             if len(filtered_options) > 15:
-                print(f"\n    \033[90m... ({len(filtered_options)} items total)\033[0m")
+                print(
+                    f"\n    \033[90m... ({len(filtered_options)} items total)\033[0m")
 
         if multi_select:
-            print("\n\033[90m[ Space: Toggle ] [ Enter: Confirm Selections ] [ Esc: Exit ]\033[0m")
+            print(
+                "\n\033[90m[ Space: Toggle ] [ Enter: Confirm Selections ] [ Esc: Exit ]\033[0m")
         else:
-            print("\n\033[90m[ ↑/↓: Navigate ] [ Enter: Select ] [ ←: Back ] [ Esc: Exit ]\033[0m")
+            print(
+                "\n\033[90m[ ↑/↓: Navigate ] [ Enter: Select ] [ ←: Back ] [ Esc: Exit ]\033[0m")
             if not filterable:
-                print("\033[90m[ k/j: Navigate ] [ l: Select ] [ h: Back ] (Vim Bindings)\033[0m")
+                print(
+                    "\033[90m[ k/j: Navigate ] [ l: Select ] [ h: Back ] (Vim Bindings)\033[0m")
 
         sys.stdout.flush()
 
@@ -151,6 +158,7 @@ def interactive_menu(title, options, filterable=False, help_text=None, multi_sel
             os.system('tput cnorm')
             sys.exit(1)
 
+
 def get_input(prompt):
     try:
         return input(f"\033[1;36m?\033[0m \033[1;37m{prompt}\033[0m").strip()
@@ -158,11 +166,14 @@ def get_input(prompt):
         print()
         return None
 
+
 def success(msg):
     print(f"\033[1;32m✔\033[0m \033[1;37m{msg}\033[0m")
 
+
 def error(msg):
     print(f"\033[1;31m✖\033[0m \033[1;31m{msg}\033[0m")
+
 
 def pause(msg="Press Enter to continue..."):
     try:
@@ -172,6 +183,7 @@ def pause(msg="Press Enter to continue..."):
 
 # --- Core Logic ---
 
+
 def find_flake_root():
     curr = os.getcwd()
     while curr != '/':
@@ -180,6 +192,7 @@ def find_flake_root():
         curr = os.path.dirname(curr)
     error("Could not find flake.nix in current or parent directories.")
     sys.exit(1)
+
 
 def get_all_modules(root, category_filter=None):
     modules_dir = os.path.join(root, 'modules')
@@ -216,11 +229,13 @@ def get_all_modules(root, category_filter=None):
             }
     return all_modules
 
+
 def rebuild_system(root):
     print('\033[H\033[J', end='')
     print("\033[1;36mStarting NixOS Rebuild...\033[0m\n")
     try:
-        subprocess.run(["sudo", "nixos-rebuild", "switch", "--flake", f"{root}#thinkpad"], check=True)
+        subprocess.run(["sudo", "nixos-rebuild", "switch",
+                       "--flake", f"{root}#thinkpad"], check=True)
         print()
         success("System rebuilt successfully!")
     except subprocess.CalledProcessError:
@@ -228,6 +243,7 @@ def rebuild_system(root):
         error("Rebuild failed. Check the logs above.")
     pause()
     return True
+
 
 def commit_and_push(root):
     print('\033[H\033[J', end='')
@@ -248,9 +264,11 @@ def commit_and_push(root):
     pause()
     return True
 
+
 def manage_host_modules(root, category_filter, menu_title):
     hosts_dir = os.path.join(root, 'modules', 'hosts')
-    hosts = [d for d in os.listdir(hosts_dir) if os.path.isdir(os.path.join(hosts_dir, d))]
+    hosts = [d for d in os.listdir(hosts_dir) if os.path.isdir(
+        os.path.join(hosts_dir, d))]
     if not hosts:
         error("No hosts found.")
         pause()
@@ -375,9 +393,11 @@ def manage_host_modules(root, category_filter, menu_title):
     pause()
     return True
 
+
 def create_module(root):
     while True:
-        categories = [d for d in os.listdir(os.path.join(root, 'modules')) if os.path.isdir(os.path.join(root, 'modules', d)) and d not in ('hosts')]
+        categories = [d for d in os.listdir(os.path.join(root, 'modules')) if os.path.isdir(
+            os.path.join(root, 'modules', d)) and d not in ('hosts')]
         cat_idx = interactive_menu("Select Module Category", categories)
         if cat_idx is None:
             return False
@@ -385,7 +405,8 @@ def create_module(root):
 
         while True:
             print('\033[H\033[J', end='')
-            name = get_input(f"Enter module name in '{category}' (e.g. 'spotify') [Ctrl+C to go back]: ")
+            name = get_input(
+                f"Enter module name in '{category}' (e.g. 'spotify') [Ctrl+C to go back]: ")
             if name is None:
                 break
             if not name or not re.match(r'^[a-zA-Z0-9_-]+$', name):
@@ -426,6 +447,7 @@ def create_module(root):
             success(f"Created module at {filepath}")
             return True
 
+
 def delete_module(root):
     all_modules = get_all_modules(root)
     if not all_modules:
@@ -434,7 +456,8 @@ def delete_module(root):
         return False
 
     module_names = list(all_modules.keys())
-    mod_idx = interactive_menu("Select Module to Delete", module_names, filterable=True)
+    mod_idx = interactive_menu(
+        "Select Module to Delete", module_names, filterable=True)
     if mod_idx is None:
         return False
 
@@ -450,6 +473,7 @@ def delete_module(root):
             pause()
             return True
     return False
+
 
 def main():
     root = find_flake_root()
@@ -480,9 +504,11 @@ def main():
             sys.exit(0)
 
         if idx == 0:
-            manage_host_modules(root, ['apps', 'cli', 'services'], "Manage Apps & Tools (Spacebar to toggle)")
+            manage_host_modules(
+                root, ['apps', 'cli', 'services'], "Manage Apps & Tools (Spacebar to toggle)")
         elif idx == 1:
-            manage_host_modules(root, ['system', 'style', 'layout'], "Manage System & Themes (Spacebar to toggle)")
+            manage_host_modules(
+                root, ['system', 'style', 'layout'], "Manage System & Themes (Spacebar to toggle)")
         elif idx == 2:
             create_module(root)
         elif idx == 3:
