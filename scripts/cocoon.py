@@ -1,9 +1,6 @@
-#!/usr/bin/env python3
 import sys
 import os
 import re
-import argparse
-import time
 import subprocess
 try:
     import readline  # noqa: F401
