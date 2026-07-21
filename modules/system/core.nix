@@ -15,6 +15,8 @@
       LC_TIME = "pt_BR.UTF-8";
     };
 
+
+
     nix.settings.experimental-features = [ "nix-command" "flakes" ];
     nix.settings.auto-optimise-store = true; # Automatically hardlink identical files
 

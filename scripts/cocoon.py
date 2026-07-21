@@ -231,6 +231,8 @@ def rebuild_system(root):
     print('\033[H\033[J', end='')
     print("\033[1;36mStarting NixOS Rebuild...\033[0m\n")
     try:
+        # Automatically stage all changes so the Nix flake evaluator can see them
+        subprocess.run(["git", "add", "."], cwd=root, check=False)
         subprocess.run(["sudo", "nixos-rebuild", "switch",
                        "--flake", f"{root}#thinkpad"], check=True)
         print()
@@ -362,7 +364,7 @@ def manage_host_modules(root, category_filter, menu_title):
     for line in lines:
         if "home-manager.users" in line:
             in_home_block = True
-        
+
         if in_home_block and "imports = [" in line:
             in_home_imports = True
 
@@ -443,9 +445,6 @@ def create_module(root):
 
             with open(filepath, 'w') as f:
                 f.write(content)
-
-            # Ensure the newly created module is tracked by git
-            subprocess.run(["git", "add", filepath], cwd=root, check=False)
 
             print('\033[H\033[J', end='')
             success(f"Created module at {filepath}")

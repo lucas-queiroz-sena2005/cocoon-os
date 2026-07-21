@@ -1,6 +1,16 @@
 { ... }: {
   flake.nixosModules.apps-ghostty = { pkgs, ... }: {
-    environment.systemPackages = [ pkgs.ghostty ];
+    environment.systemPackages = [
+      (pkgs.symlinkJoin {
+        name = "ghostty-wrapped";
+        paths = [ pkgs.ghostty ];
+        buildInputs = [ pkgs.makeWrapper ];
+        postBuild = ''
+          wrapProgram $out/bin/ghostty \
+            --set GTK_IM_MODULE simple
+        '';
+      })
+    ];
   };
 
   flake.homeModules.apps-ghostty = { ... }: {
