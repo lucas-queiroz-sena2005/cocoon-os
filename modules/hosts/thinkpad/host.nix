@@ -96,6 +96,8 @@
 
       # System aesthetics
       self.nixosModules.style-plasma
+      self.nixosModules.apps-cbonsai
+      self.nixosModules.apps-drift
       self.nixosModules.style-gruvbox-light
     ];
   };

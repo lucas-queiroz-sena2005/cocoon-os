@@ -29,7 +29,7 @@
       };
     };
     
-    # Enable image previews via ueberzugpp as per the original setup
+    # Enable image previews via ueberzugpp as a fallback for Zellij
     home.packages = [ pkgs.ueberzugpp ];
   };
 }

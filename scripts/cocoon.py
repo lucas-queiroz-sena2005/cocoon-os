@@ -362,19 +362,23 @@ def manage_host_modules(root, category_filter, menu_title):
     for line in lines:
         if "home-manager.users" in line:
             in_home_block = True
+        
         if in_home_block and "imports = [" in line:
             in_home_imports = True
 
         # Inject home modules right before the closing bracket of home imports
-        if in_home_block and in_home_imports and "];" in line and home_injections:
-            new_lines.extend(home_injections)
-            home_injections = []
+        if in_home_imports and "];" in line:
+            if home_injections:
+                new_lines.extend(home_injections)
+                home_injections = []
+            in_home_imports = False
+            in_home_block = False
 
-        # Inject nixos modules right before the closing bracket of the main imports
-        if "imports = [" in line and not in_home_block:
+        if "modules = [" in line:
             in_nixos_block = True
 
-        if in_nixos_block and not in_home_block and "];" in line and nixos_injections:
+        # Inject nixos modules right before the closing bracket of the main modules list
+        if in_nixos_block and not in_home_block and not in_home_imports and "];" in line and nixos_injections:
             new_lines.extend(nixos_injections)
             nixos_injections = []
 
@@ -428,17 +432,20 @@ def create_module(root):
                 pause()
                 return False
 
-            content = "{ pkgs, ... }: {\n"
+            content = "{ ... }: {\n"
             if type_idx in [1, 2]:
                 content += f"  flake.nixosModules.{attr_name} = {{ pkgs, ... }}:\n"
-                content += "  {\n    environment.systemPackages = with pkgs; [ ];\n  };\n\n"
+                content += f"  {{\n    environment.systemPackages = with pkgs; [ {name} ];\n  }};\n\n"
             if type_idx in [0, 2]:
                 content += f"  flake.homeModules.{attr_name} = {{ pkgs, ... }}:\n"
-                content += "  {\n    home.packages = with pkgs; [ ];\n  };\n"
+                content += f"  {{\n    home.packages = with pkgs; [ {name} ];\n  }};\n"
             content += "}\n"
 
             with open(filepath, 'w') as f:
                 f.write(content)
+
+            # Ensure the newly created module is tracked by git
+            subprocess.run(["git", "add", filepath], cwd=root, check=False)
 
             print('\033[H\033[J', end='')
             success(f"Created module at {filepath}")

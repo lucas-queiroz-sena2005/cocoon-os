@@ -34,6 +34,7 @@
         };
         mouse_mode = true;
         copy_on_select = true;
+        support_kitty_keyboard_protocol = true;
       };
     };
   };
