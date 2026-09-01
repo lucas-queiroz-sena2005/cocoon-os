@@ -34,6 +34,7 @@
             home.sessionVariables = {
               EDITOR = "hx";
               VISUAL = "hx";
+              GTK_IM_MODULE = "simple";
             };
             imports = [
               # System Layout
@@ -82,9 +83,11 @@
 
       # Hardware/Dev features
       self.nixosModules.cli-base
+      self.nixosModules.cli-network
       self.nixosModules.apps-zed
       self.nixosModules.apps-bitwarden
       self.nixosModules.apps-vesktop
+      self.nixosModules.apps-lutris
       self.nixosModules.apps-ghostty
       self.nixosModules.cli-zellij
       self.nixosModules.cli-yazi
