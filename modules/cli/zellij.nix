@@ -8,7 +8,7 @@
       enable = true;
       enableBashIntegration = true;
       settings = {
-        scroll_mode_editor = "hx";
+        scrollback_editor = "hx";
         theme = "stylix";
         themes = {
           stylix = {
